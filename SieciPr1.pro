@@ -17,12 +17,16 @@ SOURCES += main.cpp\
     element.cpp \
     transformer.cpp \
     line.cpp \
-    engine.cpp
+    engine.cpp \
+    node.cpp \
+    quadripole.cpp
 
 HEADERS  += dialog.h \
     element.h \
     transformer.h \
     line.h \
-    engine.h
+    engine.h \
+    node.h \
+    quadripole.h
 
 FORMS    += dialog.ui

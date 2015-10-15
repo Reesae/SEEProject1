@@ -11,8 +11,4 @@ voltage(v),power(p),startCurrentFactor(sCF),cosfiN(cN),cosfiK(cK)
 
 }
 
-void Engine::calculate()
-{
-
-}
 
