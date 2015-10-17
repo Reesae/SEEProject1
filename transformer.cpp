@@ -3,7 +3,7 @@
 Transformer::Transformer(double aP, double v , double iL, double cL, double sCV, double nLC, int a):
 apparentPower(aP),voltage(v),ironLosses(iL),copperLosses(cL),shortCircuitVoltage(sCV),noLoadCurrent(nLC),indexNumber(a)
 {
-
+    calculate();
 }
 
 void Transformer::calculate()
@@ -14,6 +14,7 @@ void Transformer::calculate()
     setVerticlalReal(ironLosses/pow(voltage,2));
     setVerticlalImag((noLoadCurrent * apparentPower)/pow(voltage,2));
 
+    qDebug()<<"Parametry zastępcze transformatora";
     qDebug()<<this->getHorizontal().real();
     qDebug()<<this->getHorizontal().imag();
     qDebug()<<this->getVertical().real();

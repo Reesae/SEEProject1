@@ -13,8 +13,7 @@ public:
 
     void calculate();
 private:
-    Transformer * transformer;
-    Line * line;
+    Element * element;
     Node * node;
 
 

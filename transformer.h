@@ -8,7 +8,7 @@ class Transformer : public Element
 public:
     Transformer();
     Transformer(double aP,double v ,double iL,double cL,double sCV,double nLC, int a);
-    virtual void calculate();
+    virtual void calculate() override;
 private:
     //Transformer data
     double apparentPower;
