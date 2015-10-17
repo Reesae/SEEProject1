@@ -3,6 +3,7 @@
 #include "transformer.h"
 #include "line.h"
 #include "node.h"
+#include "quadripole.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +17,23 @@ int main(int argc, char *argv[])
 
 
     std::complex<double> n1p(425000000,75000000);
-    Node * n1 = new Node(n1p,345000000.0,nullptr);
-    n1->calculate();
+    Node * n1 = new Node(n1p,345000.0,nullptr);
+    Quadripole * q = new Quadripole(l,n1);
+    Node * n2 = q->getNextNode();
+
+    std::complex<double> e2(800000000,-100000000);
+    std::complex<double> g2(600000000,100000000);
+
+    Engine* eng = new Engine(e2);
+    Engine* gen = new Engine(g2);
+    std::vector<Engine *> engines;
+    std::vector<Engine *> gens;
+    engines.push_back(eng);
+    gens.push_back(gen);
+
+    n2->addEngines(engines,gens);
+    Quadripole * q2 = new Quadripole(t,n2);
+
 
 
 

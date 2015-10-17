@@ -6,10 +6,19 @@
 class Node
 {
 public:
-    Node(std::complex<double> & aP,double v,Node * n);
-    Node(std::vector<Engine *>  eng,std::vector<Engine *>  gen,double v,Node * n);
+    Node(std::complex<double> aP,double v,Node * n);
+
+    void addEngines(std::vector<Engine *>  &eng,std::vector<Engine *> &gen);
     void calculate();
-    inline std::complex<double> & getNodePower(){return apparentNodePower;}
+
+    inline void setNodePower(std::complex<double> p){apparentNodePower = p;}
+    inline std::complex<double> getNodePower(){return apparentNodePower;}
+
+    inline void setVerticlalLosses(std::complex<double> p){verticalLosses = p;}
+    inline std::complex<double> getVerticlalLosses(){return verticalLosses;}
+
+    inline double getVoltage(){return voltage;}
+
 private:
     std::complex<double> apparentNodePower;
     std::complex<double> verticalLosses;

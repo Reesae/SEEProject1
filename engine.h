@@ -10,6 +10,7 @@ public:
 
     Engine();
     Engine(double v,double p,double sCF,double cN,double cK,state s);
+    Engine(std::complex<double> s);
     void calculate();
     inline std::complex<double> & getApparentPower(){return apparentPower;}
 private:

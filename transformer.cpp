@@ -12,7 +12,7 @@ void Transformer::calculate()
     setHorizontalReal((copperLosses/apparentPower) * (pow(voltage,2)/apparentPower));
     setHorizontalImag(sqrt(pow(shortCircuitVoltage,2)-pow((copperLosses/apparentPower),2)) * (pow(voltage,2)/apparentPower));
     setVerticlalReal(ironLosses/pow(voltage,2));
-    setVerticlalImag((noLoadCurrent * apparentPower)/pow(voltage,2));
+    setVerticlalImag((-1.0) * (noLoadCurrent * apparentPower)/pow(voltage,2));
 
     qDebug()<<"Parametry zastępcze transformatora";
     qDebug()<<this->getHorizontal().real();

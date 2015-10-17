@@ -8,15 +8,21 @@ class Quadripole
 {
 public:
     Quadripole();
-    Quadripole(Transformer & t,Node & n);
-    Quadripole(Line & l,Node & n);
-
+    Quadripole(Element * e, Node *n);
     void calculate();
+    inline Node * getNextNode(){return nextNode;}
 private:
     Element * element;
     Node * node;
+    Node * nextNode;
 
-
+    double verticalVoltageLosses;
+    double horizontalVoltageLosses;
+    double nextNodeVoltage;
+    double angle;
+    std::complex<double> horizontalTransmissionLosses;
+    std::complex<double> verticalNodeLosses_2;
+    std::complex<double> nextNodeApparentPower;
 
 };
 

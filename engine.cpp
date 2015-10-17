@@ -11,6 +11,11 @@ voltage(v),activePower(p),startCurrentFactor(sCF),cosfiN(cN),cosfiK(cK),st(s)
     calculate();
 }
 
+Engine::Engine(std::complex<double> s):apparentPower(s)
+{
+
+}
+
 //Calulate apparentPower based on engine state
 void Engine::calculate()
 {
