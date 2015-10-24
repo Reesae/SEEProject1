@@ -9,12 +9,12 @@ class Element
 public:
     virtual void calculate()=0;
 
-    inline void setVerticlalReal(const double & p){vertical.real(p);}
-    inline void setVerticlalImag(const double & p){vertical.imag(p);}
+    inline void setVerticlalReal(const double p){vertical.real(p);}
+    inline void setVerticlalImag(const double p){vertical.imag(p);}
     inline std::complex<double> getVertical(){return vertical;}
 
-    inline void setHorizontalReal(const double & p){horizontal.real(p);}
-    inline void setHorizontalImag(const double & p){horizontal.imag(p);}
+    inline void setHorizontalReal(const double p){horizontal.real(p);}
+    inline void setHorizontalImag(const double p){horizontal.imag(p);}
     inline std::complex<double> getHorizontal(){return horizontal;}
 private:
     //Equivalent Circuit parameters

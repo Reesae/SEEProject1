@@ -5,13 +5,15 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT += xlsx
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SieciPr1
 TEMPLATE = app
 
 CONFIG += c++14
+CONFIG += static
+
 SOURCES += main.cpp\
         dialog.cpp \
     element.cpp \
@@ -28,5 +30,5 @@ HEADERS  += dialog.h \
     engine.h \
     node.h \
     quadripole.h
-
 FORMS    += dialog.ui
+

@@ -17,7 +17,7 @@ void Quadripole::calculate()
     vNLosses.imag((-1.0) * element->getVertical().imag() * pow(node->getVoltage(),2)/2);
     node->setVerticlalLosses(vNLosses);
 
-    qDebug()<< "Straty poprzeczne w węźle:";
+    qDebug()<< "Straty poprzeczne(1) w węźle:";
     qDebug()<<vNLosses.real();
     qDebug()<<vNLosses.imag();
 
@@ -35,9 +35,9 @@ void Quadripole::calculate()
 
     nextNodeVoltage = sqrt(pow(node->getVoltage() + horizontalVoltageLosses,2) + pow(verticalVoltageLosses,2));
 
-    qDebug()<<"Strata podłużna";
+    qDebug()<<"Strata podłużna napiecia";
     qDebug()<< horizontalVoltageLosses;
-    qDebug()<<"Strata poprzeczna";
+    qDebug()<<"Strata poprzeczna napiecia";
     qDebug()<< verticalVoltageLosses;
     qDebug()<<"nastepne napiecie";
     qDebug()<< nextNodeVoltage;

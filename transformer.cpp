@@ -1,7 +1,7 @@
 #include "transformer.h"
 #include <QDebug>
-Transformer::Transformer(double aP, double v , double iL, double cL, double sCV, double nLC, int a):
-apparentPower(aP),voltage(v),ironLosses(iL),copperLosses(cL),shortCircuitVoltage(sCV),noLoadCurrent(nLC),indexNumber(a)
+Transformer::Transformer(double aP, double v , double iL, double cL, double sCV, double nLC):
+apparentPower(aP),voltage(v),ironLosses(iL),copperLosses(cL),shortCircuitVoltage(sCV),noLoadCurrent(nLC)
 {
     calculate();
 }

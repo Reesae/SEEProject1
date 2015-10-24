@@ -7,7 +7,7 @@ class Transformer : public Element
 
 public:
     Transformer();
-    Transformer(double aP,double v ,double iL,double cL,double sCV,double nLC, int a);
+    Transformer(double aP, double v , double iL, double cL, double sCV, double nLC);
     virtual void calculate() override;
 private:
     //Transformer data
@@ -17,7 +17,7 @@ private:
     double copperLosses;
     double shortCircuitVoltage;
     double noLoadCurrent;
-    int indexNumber;
+
 
 
 
