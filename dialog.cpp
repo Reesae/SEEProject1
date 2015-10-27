@@ -67,9 +67,8 @@ void Dialog::calculate()
     Node * n5 = q4->getNextNode();
     nodes.push_back(n5);
 
-
+    //Second conditions
     engines_1.at(0)->changeState();
-    qDebug()<<"dd";
     Node * n1_r = new Node(0,10000,nullptr);
     n1_r->addEngines(engines_1,eee);
     nodes_r.push_back(n1_r);
@@ -91,11 +90,25 @@ void Dialog::calculate()
     Node * n5_r = q4_r->getNextNode();
     nodes_r.push_back(n5_r);
 
-    createSpreadsheet();
+    nodes[0]->setNominalVoltage(525.0);
+    nodes[1]->setNominalVoltage(10500.0);
+    nodes[2]->setNominalVoltage(10500.0);
+    nodes[3]->setNominalVoltage(10500.0);
+    nodes[4]->setNominalVoltage(110000.0);
+
+    nodes_r[0]->setNominalVoltage(525.0);
+    nodes_r[1]->setNominalVoltage(10500.0);
+    nodes_r[2]->setNominalVoltage(10500.0);
+    nodes_r[3]->setNominalVoltage(10500.0);
+    nodes_r[4]->setNominalVoltage(11000.0);
+
 }
 
 void Dialog::createSpreadsheet()
 {
+    const double Mega = 1000000.0;
+    const double Kilo = 1000.0;
+
     //Tables titles
     QStringList titles;
     titles << "Tabela 1. Dane gałęziowe"
@@ -110,79 +123,185 @@ void Dialog::createSpreadsheet()
     label1 << "Czwórnik" << "R [\u2126]"<<"X [\u2126]"<<"G [\u00B5S]"<<"B [\u00B5S]";
     label2 << "Czwórnik p-k" << "U [kV]" << "Pp [MW]" <<"dPpp [MW]" <<"Qp [MVar]" <<"dPpp [MVar]"<<"dP [MW]" <<"dQ [MVar]"
            << "Uk [kV]" << "Pk [MW]" <<"dPkk [MW]" << "Qk [MVar]" <<"dQkk [MVar]";
-    label3 << "Nap. znam. [kV]" << "Nap. obl. [kV]" <<"Procentowe odch. nap." <<"Spelnienie ogr. nap."
+    label3 << "Węzeł" << "Nap. znam. [kV]" << "Nap. obl. [kV]" <<"Procentowe odch. nap." <<"Spelnienie ogr. nap."
            << "Węzłowa moc czynna odbierana [MW]" << "Węzłowa moc bierna odbierana [MVar]"
            << "Węzłowa moc czynna generowana [MW]" << "Węzłowa moc bierna generowana [MVar]";
 
     //Create a new .xlsx file.
 
-        QXlsx::Document xlsx;
-        xlsx.write("A1", titles.at(0));
+     QXlsx::Document xlsx;
+     xlsx.write("A1", titles.at(0));
 
-        QXlsx::Format titleFormat;
-        titleFormat.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
-        titleFormat.setBorderStyle(QXlsx::Format::BorderThin);
-        xlsx.mergeCells("A1:E1", titleFormat);
+     QXlsx::Format titleFormat;
+     titleFormat.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
+     titleFormat.setBorderStyle(QXlsx::Format::BorderThin);
+     xlsx.mergeCells("A1:E1", titleFormat);
 
-        int rowCount = 2;
-        QChar columnCount = 'A';
+     int rowCount = 2;
+     QChar columnCount = 'A';
 
         for(auto itm: label1)
         {
-             xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm);
-             columnCount=static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
+             xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm,titleFormat);
+             columnCount = static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
         }
 
-        rowCount++;
+      rowCount++;
+      int stopRow = rowCount;
+        for(auto itm: elements)
+        {
 
-        for(auto itm: elements){
-
+           xlsx.write((QString("A%1").arg(rowCount)),QString("%1 - %2").arg(rowCount - stopRow +2).arg(rowCount - stopRow +1),titleFormat);
            xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getHorizontal().real()),titleFormat);
            xlsx.write((QString("C%1").arg(rowCount)),QString::number(itm->getHorizontal().imag()),titleFormat);
-           xlsx.write((QString("D%1").arg(rowCount)),QString::number(1000000.0 * itm->getVertical().real()),titleFormat);
-           xlsx.write((QString("E%1").arg(rowCount)),QString::number(1000000.0 * itm->getVertical().imag()),titleFormat);
+           xlsx.write((QString("D%1").arg(rowCount)),QString::number(Mega * itm->getVertical().real()),titleFormat);
+           xlsx.write((QString("E%1").arg(rowCount)),QString::number(Mega * itm->getVertical().imag()),titleFormat);
 
            rowCount++;
-    }
+        }
 
-        rowCount++;
+     rowCount++;
 
-        //Table 2a
-        xlsx.write(QString("A%1").arg(rowCount),titles.at(1));
-        xlsx.mergeCells(QString("A%1:M%1").arg(rowCount), titleFormat);
+      //Table 2a
+     xlsx.write(QString("A%1").arg(rowCount),titles.at(1));
+     xlsx.mergeCells(QString("A%1:M%1").arg(rowCount), titleFormat);
 
-        rowCount++;
-        columnCount = 'A';
+     rowCount++;
+     columnCount = 'A';
 
         for(auto itm: label2)
         {
-             xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm);
+             xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm,titleFormat);
              columnCount=static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
         }
-         rowCount++;
-         int rowCountCopy = rowCount;
-//TODO
-        for(auto itm: nodes)
+
+     rowCount++;
+
+     stopRow = rowCount;
+        for(auto itm : quadripoles)
         {
-            xlsx.write((QString("B%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("C%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("D%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("E%1").arg(rowCount)),QString::number(),titleFormat);
+            xlsx.write((QString("A%1").arg(rowCount)),QString("%1 - %2").arg(rowCount - stopRow +2).arg(rowCount - stopRow +1),titleFormat);
+            xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNextNode()->getVoltage()/Kilo),titleFormat);
+            xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNextNode()->getVoltage()/Kilo),titleFormat);
+            xlsx.write((QString("C%1").arg(rowCount)),QString::number(itm->getNextNode()->getNodePower().real()/Mega),titleFormat);
+            xlsx.write((QString("D%1").arg(rowCount)),QString::number(itm->getVerticalNodeLosses_2().real()/Mega),titleFormat);
+            xlsx.write((QString("E%1").arg(rowCount)),QString::number(itm->getNextNode()->getNodePower().imag()/Mega),titleFormat);
+            xlsx.write((QString("F%1").arg(rowCount)),QString::number(itm->getVerticalNodeLosses_2().imag()/Mega),titleFormat);
+            xlsx.write((QString("G%1").arg(rowCount)),QString::number(itm->getHorizontalTransmissionLosses().real()/Mega),titleFormat);
+            xlsx.write((QString("H%1").arg(rowCount)),QString::number(itm->getHorizontalTransmissionLosses().imag()/Mega),titleFormat);
+            xlsx.write((QString("I%1").arg(rowCount)),QString::number(itm->getNode()->getVoltage()/Kilo),titleFormat);
+            xlsx.write((QString("J%1").arg(rowCount)),QString::number(itm->getNode()->getNodePower().real()/Mega),titleFormat);
+            xlsx.write((QString("K%1").arg(rowCount)),QString::number(itm->getNode()->getVerticlalLosses().real()/Mega),titleFormat);
+            xlsx.write((QString("L%1").arg(rowCount)),QString::number(itm->getNode()->getNodePower().imag()/Mega),titleFormat);
+            xlsx.write((QString("M%1").arg(rowCount)),QString::number(itm->getNode()->getVerticlalLosses().imag()/Mega),titleFormat);
             rowCount++;
         }
 
-        int rowCount = rowCountCopy;
+        rowCount++;
 
-        for(auto itm : quadripoles)
-        {
-            xlsx.write((QString("B%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("C%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("D%1").arg(rowCount)),QString::number(),titleFormat);
-            xlsx.write((QString("E%1").arg(rowCount)),QString::number(),titleFormat);
-        }
+              //Table 2b
+             xlsx.write(QString("A%1").arg(rowCount),titles.at(2));
+             xlsx.mergeCells(QString("A%1:M%1").arg(rowCount), titleFormat);
 
+             rowCount++;
+             columnCount = 'A';
 
+                for(auto itm: label2)
+                {
+                     xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm,titleFormat);
+                     columnCount=static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
+                }
 
+             rowCount++;
+
+             stopRow = rowCount;
+             //Should've made function but whatever
+                for(auto itm : quadripoles_r)
+                {
+                    xlsx.write((QString("A%1").arg(rowCount)),QString("%1 - %2").arg(rowCount - stopRow +2).arg(rowCount - stopRow +1),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNextNode()->getVoltage()/Kilo),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNextNode()->getVoltage()/Kilo),titleFormat);
+                    xlsx.write((QString("C%1").arg(rowCount)),QString::number(itm->getNextNode()->getNodePower().real()/Mega),titleFormat);
+                    xlsx.write((QString("D%1").arg(rowCount)),QString::number(itm->getVerticalNodeLosses_2().real()/Mega),titleFormat);
+                    xlsx.write((QString("E%1").arg(rowCount)),QString::number(itm->getNextNode()->getNodePower().imag()/Mega),titleFormat);
+                    xlsx.write((QString("F%1").arg(rowCount)),QString::number(itm->getVerticalNodeLosses_2().imag()/Mega),titleFormat);
+                    xlsx.write((QString("G%1").arg(rowCount)),QString::number(itm->getHorizontalTransmissionLosses().real()/Mega),titleFormat);
+                    xlsx.write((QString("H%1").arg(rowCount)),QString::number(itm->getHorizontalTransmissionLosses().imag()/Mega),titleFormat);
+                    xlsx.write((QString("I%1").arg(rowCount)),QString::number(itm->getNode()->getVoltage()/Kilo),titleFormat);
+                    xlsx.write((QString("J%1").arg(rowCount)),QString::number(itm->getNode()->getNodePower().real()/Mega),titleFormat);
+                    xlsx.write((QString("K%1").arg(rowCount)),QString::number(itm->getNode()->getVerticlalLosses().real()/Mega),titleFormat);
+                    xlsx.write((QString("L%1").arg(rowCount)),QString::number(itm->getNode()->getNodePower().imag()/Mega),titleFormat);
+                    xlsx.write((QString("M%1").arg(rowCount)),QString::number(itm->getNode()->getVerticlalLosses().imag()/Mega),titleFormat);
+                    rowCount++;
+                }
+
+        //Table 3a
+                rowCount++;
+                xlsx.write(QString("A%1").arg(rowCount),titles.at(2));
+                xlsx.mergeCells(QString("A%1:H%1").arg(rowCount), titleFormat);
+
+                rowCount++;
+                columnCount = 'A';
+
+                   for(auto itm: label3)
+                   {
+                        xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm,titleFormat);
+                        columnCount = static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
+                   }
+
+                rowCount++;
+                stopRow = rowCount;
+                for(auto itm : nodes)
+                {
+                    xlsx.write((QString("A%1").arg(rowCount)),QString("%1").arg(rowCount - stopRow + 1),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNominalVoltage()),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getVoltage()),titleFormat);
+                    double diff = (itm->getVoltage() - itm->getNominalVoltage())/itm->getNominalVoltage();
+                    xlsx.write((QString("C%1").arg(rowCount)),QString::number(diff),titleFormat);
+                    if(diff > 0.9 && diff < 1.1)
+                         xlsx.write((QString("D%1").arg(rowCount)),QString("TAK"),titleFormat);
+                    else xlsx.write((QString("D%1").arg(rowCount)),QString("NIE"),titleFormat);
+
+                    xlsx.write((QString("E%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("F%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("G%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("H%1").arg(rowCount)),QString::number(0),titleFormat);
+                    rowCount++;
+                }
+        //Table 3b
+
+                rowCount++;
+                xlsx.write(QString("A%1").arg(rowCount),titles.at(2));
+                xlsx.mergeCells(QString("A%1:H%1").arg(rowCount), titleFormat);
+
+                rowCount++;
+                columnCount = 'A';
+
+                   for(auto itm: label3)
+                   {
+                        xlsx.write((QString("%1%2").arg(columnCount).arg(rowCount)),itm,titleFormat);
+                        columnCount = static_cast<QLatin1Char>(columnCount.toLatin1() + 1);
+                   }
+
+                rowCount++;
+                stopRow = rowCount;
+                for(auto itm : nodes_r)
+                {
+                    xlsx.write((QString("A%1").arg(rowCount)),QString("%1").arg(rowCount - stopRow + 1),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getNominalVoltage()),titleFormat);
+                    xlsx.write((QString("B%1").arg(rowCount)),QString::number(itm->getVoltage()),titleFormat);
+                    double diff = (itm->getVoltage() - itm->getNominalVoltage())/itm->getNominalVoltage();
+                    xlsx.write((QString("C%1").arg(rowCount)),QString::number(diff),titleFormat);
+                    if(diff > 0.9 && diff < 1.1)
+                         xlsx.write((QString("D%1").arg(rowCount)),QString("TAK"),titleFormat);
+                    else xlsx.write((QString("D%1").arg(rowCount)),QString("NIE"),titleFormat);
+
+                    xlsx.write((QString("E%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("F%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("G%1").arg(rowCount)),QString::number(0),titleFormat);
+                    xlsx.write((QString("H%1").arg(rowCount)),QString::number(0),titleFormat);
+                    rowCount++;
+                }
 
         xlsx.saveAs(QString("%1.xlsx").arg(ui->lineEdit->text()));
 }
@@ -215,5 +334,7 @@ void Dialog::on_pushButton_clicked()
     }
 
     calculate();
-
+    createSpreadsheet();
 }
+
+

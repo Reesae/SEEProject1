@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 class Ui_Dialog
 {
 public:
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
@@ -39,10 +39,10 @@ public:
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
         Dialog->resize(249, 111);
-        widget = new QWidget(Dialog);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(20, 20, 212, 61));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(Dialog);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 20, 212, 61));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
@@ -50,12 +50,12 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QStringLiteral("label"));
 
         horizontalLayout->addWidget(label);
 
-        lineEdit = new QLineEdit(widget);
+        lineEdit = new QLineEdit(layoutWidget);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
 
         horizontalLayout->addWidget(lineEdit);
@@ -63,11 +63,13 @@ public:
 
         verticalLayout->addLayout(horizontalLayout);
 
-        pushButton = new QPushButton(widget);
+        pushButton = new QPushButton(layoutWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
 
         verticalLayout->addWidget(pushButton);
 
+        layoutWidget->raise();
+        pushButton->raise();
 
         retranslateUi(Dialog);
 
@@ -76,7 +78,7 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0));
+        Dialog->setWindowTitle(QApplication::translate("Dialog", "SiSiLab420", 0));
         label->setText(QApplication::translate("Dialog", "Nr. indeksu", 0));
         pushButton->setText(QApplication::translate("Dialog", "Start", 0));
     } // retranslateUi

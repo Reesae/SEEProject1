@@ -10,7 +10,11 @@ public:
     Quadripole();
     Quadripole(Element * e, Node *n);
     void calculate();
+    inline Node * getNode(){return node;}
     inline Node * getNextNode(){return nextNode;}
+
+    inline std::complex<double> & getVerticalNodeLosses_2(){return verticalNodeLosses_2;}
+    inline std::complex<double> & getHorizontalTransmissionLosses(){return horizontalTransmissionLosses;}
 private:
     Element * element;
     Node * node;

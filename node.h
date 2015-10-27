@@ -18,6 +18,8 @@ public:
     inline std::complex<double> getVerticlalLosses(){return verticalLosses;}
 
     inline double getVoltage(){return voltage;}
+    inline void setNominalVoltage(double v){nominalVoltage = v;}
+    inline double getNominalVoltage(){return nominalVoltage;}
 
 private:
     std::complex<double> apparentNodePower;
